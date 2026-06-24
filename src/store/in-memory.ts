@@ -33,19 +33,20 @@ function getStore(): GlobalStore {
 
 class InMemoryStore {
   debugUsers() {
-    return Array.from(getStore().users.values()).map((u) => ({
-      id: u._id,
-      email: u.email,
-      hashPrefix: u.password.slice(0, 20),
-    }));
-  }
+  return Array.from(getStore().users.values()).map((u) => ({
+    id: u._id,
+    email: u.email,
+    hashPrefix: u.password.slice(0, 20),
+  }));
+}
 
   async findUserByEmail(email: string): Promise<InMemoryUser | null> {
-    for (const user of getStore().users.values()) {
-      if (user.email === email) return user;
-    }
-    return null;
+  const users = Array.from(getStore().users.values());
+  for (const user of users) {
+    if (user.email === email) return user;
   }
+  return null;
+}
 
   async findUserById(id: string): Promise<InMemoryUser | null> {
     return getStore().users.get(id) || null;
