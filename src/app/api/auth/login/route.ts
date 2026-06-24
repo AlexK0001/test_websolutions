@@ -43,9 +43,13 @@ export async function POST(request: Request) {
     } else {
       const user = await inMemoryStore.findUserByEmail(email);
       if (!user) {
+        console.log("[login] user not found:", email);
+        console.log("[login] all users:", inMemoryStore.debugUsers());
         return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
       }
+      console.log("[login] found user:", user.email, "hash:", user.password.slice(0, 20));
       const valid = await bcrypt.compare(password, user.password);
+      console.log("[login] password valid:", valid);
       if (!valid) {
         return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
       }
